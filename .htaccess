@@ -1,0 +1,5 @@
+RedirectMatch 403 ^/(app|core|config|storage|database|docs)/
+
+RewriteEngine On
+RewriteRule ^$ public/ [L]
+RewriteRule (.*) public/$1 [L]
