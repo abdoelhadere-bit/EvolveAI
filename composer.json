@@ -1,0 +1,8 @@
+{
+    "name": "evolveai/app",
+    "description": "EvolveAI",
+    "type": "project",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "require": {}
+}
