@@ -599,7 +599,43 @@
                             <label for="area6">Social Media Tasks</label>
                         </div>
                         <div class="option">
-                   
+                            <input type="checkbox" id="area7" name="interest_areas[]" value="Video Projects">
+                            <label for="area7">Video Projects</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="area8" name="interest_areas[]" value="Photography">
+                            <label for="area8">Photography</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="area9" name="interest_areas[]" value="E-commerce">
+                            <label for="area9">E-commerce</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="area10" name="interest_areas[]" value="Consulting & Strategy">
+                            <label for="area10">Consulting & Strategy</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 14 -->
+                <div class="step" data-step="14">
+                    <div class="step-indicator">Step 14 of 20</div>
+                    <h2 class="question-title">Are you open to picking up new skills?</h2>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="skill1" name="learning_willingness" value="Absolutely! Let's go!" required>
+                            <label for="skill1">Absolutely! Let's go!</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="skill2" name="learning_willingness" value="Not really">
+                            <label for="skill2">Not really</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="skill3" name="learning_willingness" value="Still thinking about it">
+                            <label for="skill3">Still thinking about it</label>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Step 15 -->
                 <div class="step" data-step="15">
