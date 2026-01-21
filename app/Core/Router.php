@@ -1,10 +1,9 @@
 <?php
 
-namespace app\Core;
-
+namespace App\Core;
 
 class Router {
-    protected $currentController = 'app\Controllers\HomeController';
+    protected $currentController = 'App\Controllers\HomeController';
     protected $currentMethod = 'index'; 
     protected $params = [];
 
@@ -14,7 +13,7 @@ class Router {
         $requestMethod = strtolower($_SERVER['REQUEST_METHOD']);
 
         if (isset($url[0])) {
-            $controllerName = 'app\Controllers\\' . ucfirst($url[0]) . 'Controller';
+            $controllerName = 'App\Controllers\\' . ucfirst($url[0]) . 'Controller';
             if (class_exists($controllerName)) {
                 $this->currentController = $controllerName;
                 unset($url[0]);
@@ -31,28 +30,23 @@ class Router {
             return;
         }
 
-        $urlMethod = isset($url[1]) ? $url[1] : 'index';
-        
-        $targetMethod = $requestMethod . ucfirst($urlMethod);
+        $urlMethod = isset($url[1]) ? $url[1] : null;
 
-        if (method_exists($this->currentController, $targetMethod) && is_callable([$this->currentController, $targetMethod])
-        ) {
-            $this->currentMethod = $targetMethod;
-            if(isset($url[1])) unset($url[1]);
-        } else {
-
-            $this->handleNotFound();
-            return;
+        if ($urlMethod) {
+            $targetMethod = $requestMethod . ucfirst($urlMethod);
+            if (method_exists($this->currentController, $targetMethod)) {
+                $this->currentMethod = $targetMethod;
+                unset($url[1]); 
+            }
         }
-
+        
         $this->params = $url ? array_values($url) : [];
 
-        $this->currentController = new $this->currentController; 
+
         call_user_func_array([$this->currentController, $this->currentMethod], $this->params);
     }
 
     protected function handleNotFound() {
-        
         http_response_code(404);
         echo "404 - Not Found";
         exit();
