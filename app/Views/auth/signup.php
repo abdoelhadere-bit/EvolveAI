@@ -128,7 +128,7 @@
         <p>Get started with your free account today</p>
     </div>
 
-    <form id="signupForm" action="/EvolveAI/auth/signup" method="POST">
+    <form id="signupForm" action="/EvolveAI/index.php?url=auth/signup" method="POST">
         <div class="form-group">
             <label for="fullname">Full Name</label>
             <input type="text" id="fullname" name="full_name" placeholder="John Doe" required>
