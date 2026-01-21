@@ -663,7 +663,36 @@
 
                 <!-- Step 16 -->
                 <div class="step" data-step="16">
-                   
+                    <div class="step-indicator">Step 16 of 20</div>
+                    <h2 class="question-title">Do you have a dream goal you're working toward?</h2>
+                    <p class="question-subtitle">It's easier to stay motivated when you've got something exciting in mind.</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="dream1" name="dream_goal" value="Own my dream home" required>
+                            <label for="dream1">Own my dream home</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="dream2" name="dream_goal" value="Throw the perfect wedding">
+                            <label for="dream2">Throw the perfect wedding</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="dream3" name="dream_goal" value="Take a big vacation">
+                            <label for="dream3">Take a big vacation</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="dream4" name="dream_goal" value="Get a new car">
+                            <label for="dream4">Get a new car</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="dream5" name="dream_goal" value="Retire stress-free">
+                            <label for="dream5">Retire stress-free</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="dream6" name="dream_goal" value="Something else">
+                            <label for="dream6">Something else</label>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Step 17 -->
                 <div class="step" data-step="17">
