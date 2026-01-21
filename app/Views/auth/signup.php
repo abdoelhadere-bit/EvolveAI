@@ -128,7 +128,7 @@
         <p>Get started with your free account today</p>
     </div>
 
-    <form id="signupForm" action="auth/login" method="POST">
+    <form id="signupForm" action="/EvolveAI/auth/signup" method="POST">
         <div class="form-group">
             <label for="fullname">Full Name</label>
             <input type="text" id="fullname" name="full_name" placeholder="John Doe" required>
@@ -157,32 +157,6 @@
         Already have an account? <a href="#">Log In</a>
     </div>
 </div>
-
-<script>
-    const form = document.getElementById('signupForm');
-    const password = document.getElementById('password');
-    const confirmPassword = document.getElementById('confirm_password');
-    const errorMsg = document.getElementById('passwordError');
-
-    form.addEventListener('submit', function(e) {
-        if (password.value !== confirmPassword.value) {
-            e.preventDefault(); // Stop form submission
-            errorMsg.style.display = 'block';
-            confirmPassword.style.borderColor = '#dc3545';
-        } else {
-            errorMsg.style.display = 'none';
-            confirmPassword.style.borderColor = '#ddd';
-            // Form is valid, proceed with submission
-            alert('Form submitted successfully!');
-        }
-    });
-
-    // Clear error when user starts typing again
-    confirmPassword.addEventListener('input', () => {
-        errorMsg.style.display = 'none';
-        confirmPassword.style.borderColor = '#ddd';
-    });
-</script>
 
 </body>
 </html>

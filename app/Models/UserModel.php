@@ -1,8 +1,8 @@
 <?php
 
-namespace app\Model;
+namespace App\Models;
 
-class User
+class UserModel
 {
     private ?int $id= null;
     private ?string $full_name =null;
@@ -16,7 +16,7 @@ class User
     ?string $email = null,
     ?string $password_hash = null,
     ?string $created_at = null,
-    ?string $password_confirm)
+    ?string $password_confirm = null)
     {
         $this->id= $id;
         $this->full_name = $full_name;

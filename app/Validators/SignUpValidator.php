@@ -1,13 +1,13 @@
 <?php
 
-namespace app\Validators;
+namespace App\Validators;
 
 use Exception;
-use app\Model\User;
+use App\Models\UserModel;
 
 class SignupValidator
 {
-    public function validate(User $user): User
+    public function validate(UserModel $user): UserModel
     {
 
         if(empty($user->getFname())){ throw new Exception("The first name field is required."); }

@@ -1,11 +1,11 @@
 <?php
 
-namespace app\Controllers;
+namespace App\Controllers;
 
-use app\Validators\LoginValidator;
-use app\Validators\SignupValidator;
-use app\Repositories\UserRepository;
-use app\Model\User;
+use App\Validators\LoginValidator;
+use App\Validators\SignupValidator;
+use App\Repositories\UserRepository;
+use App\Models\UserModel;
 use Exception;
 
 class AuthController
@@ -28,14 +28,14 @@ class AuthController
 
     public function getSignup()
     {
-         require_once '../app/Views/auth/signup.php';
+        require_once '../app/Views/auth/signup.php';
     }
 
     public function postSignup(): void
     {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-                $user= new user (
+                $user= new userModel (
                     null,
                     $_POST['full_name']? $_POST['full_name'] : null,
                     $_POST['email']? $_POST['email'] : null,
@@ -68,14 +68,18 @@ class AuthController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            $user= new user (
-                null,
+        
+            $user= new userModel (
                 null,
                 null,
                 $_POST['email'],
                 $_POST['password'],
+                null,
                 null
             );
+
+            var_dump($_POST['password']);
+            var_dump($user);
 
         }
 
@@ -98,7 +102,7 @@ class AuthController
             
             $_SESSION['login_time']= time();
 
-            header("Location: " . URLROOT . "/income/view");
+            header("Location: " . URLROOT . "/home/view");
             exit;
 
         } catch (Exception $e) {

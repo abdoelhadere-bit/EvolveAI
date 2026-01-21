@@ -1,13 +1,13 @@
 <?php
 
-namespace app\Core;
+namespace App\Core;
 
 use PDO;
 use PDOException;
 use RuntimeException;
 
 
-class Connection
+class Database
 {
   private static ?PDO $instance = null;
 
@@ -22,7 +22,7 @@ class Connection
     {
         if (self::$instance === null) {
 
-            $config = require __DIR__ . '/../../config/database.php';
+            $config = require __DIR__ . '/../../config/config.php';
 
             $dsn ="pgsql:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
 
