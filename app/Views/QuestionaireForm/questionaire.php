@@ -591,7 +591,14 @@
                             <label for="area4">AI & Automation</label>
                         </div>
                         <div class="option">
-                   
+                            <input type="checkbox" id="area5" name="interest_areas[]" value="Marketing & Ads">
+                            <label for="area5">Marketing & Ads</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="area6" name="interest_areas[]" value="Social Media Tasks">
+                            <label for="area6">Social Media Tasks</label>
+                        </div>
+                        <div class="option">
                    
 
                 <!-- Step 15 -->
