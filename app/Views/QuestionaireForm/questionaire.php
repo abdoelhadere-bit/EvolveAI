@@ -746,7 +746,19 @@
                 <div class="step" data-step="19">
                     <div class="step-indicator">Step 19 of 20</div>
                     <h2 class="question-title">Which device will you use for learning?</h2>
-                  
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="device1" name="preferred_device" value="Phone" required>
+                            <label for="device1">Phone</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="device2" name="preferred_device" value="Desktop">
+                            <label for="device2">Desktop</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="device3" name="preferred_device" value="Tablet">
+                            <label for="device3">Tablet</label>
+                        </div>
                         <div class="option">
                             <input type="radio" id="device4" name="preferred_device" value="Multiple devices">
                             <label for="device4">Multiple devices</label>
@@ -757,7 +769,26 @@
                 <!-- Step 20 -->
                 <div class="step" data-step="20">
                     <div class="step-indicator">Step 20 of 20</div>
-               
+                    <h2 class="question-title">What type of lesson format do you prefer?</h2>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="format1" name="preferred_format" value="Text" required>
+                            <label for="format1">Text</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="format2" name="preferred_format" value="Video">
+                            <label for="format2">Video</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="format3" name="preferred_format" value="Interactive lessons">
+                            <label for="format3">Interactive lessons</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="format4" name="preferred_format" value="Doesn't matter">
+                            <label for="format4">Doesn't matter</label>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="button-group">
                     <button type="button" class="btn btn-secondary" id="prevBtn" onclick="changeStep(-1)">Previous</button>
@@ -772,6 +803,148 @@
         </div>
     </div>
 
+    <script>
+        let currentStep = 1;
+        const totalSteps = 20;
 
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateButtons();
+            updateProgress();
+        });
+
+        function changeStep(direction) {
+            const currentStepElement = document.querySelector(`.step[data-step="${currentStep}"]`);
+            
+            // Validate current step before moving forward
+            if (direction === 1 && !validateStep(currentStepElement)) {
+                showError('Please answer the question before continuing.');
+                return;
+            }
+
+            hideError();
+
+            // Hide current step
+            currentStepElement.classList.remove('active');
+
+            // Update step number
+            currentStep += direction;
+
+            // Show new step
+            const newStepElement = document.querySelector(`.step[data-step="${currentStep}"]`);
+            newStepElement.classList.add('active');
+
+            // Update UI
+            updateButtons();
+            updateProgress();
+
+            // Scroll to top
+            document.querySelector('.form-container').scrollTop = 0;
+        }
+
+        function validateStep(stepElement) {
+            const radios = stepElement.querySelectorAll('input[type="radio"]');
+            const checkboxes = stepElement.querySelectorAll('input[type="checkbox"]');
+
+            // Check if it's a radio question
+            if (radios.length > 0) {
+                const name = radios[0].name;
+                return document.querySelector(`input[name="${name}"]:checked`) !== null;
+            }
+
+            // For checkbox questions, at least one should be checked (optional validation)
+            // You can make this required by uncommenting the line below
+            // if (checkboxes.length > 0) {
+            //     return Array.from(checkboxes).some(cb => cb.checked);
+            // }
+
+            return true;
+        }
+
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            // Hide/show previous button
+            prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
+
+            // Change next button text on last step
+            if (currentStep === totalSteps) {
+                nextBtn.textContent = 'Complete Profile';
+                nextBtn.onclick = submitForm;
+            } else {
+                nextBtn.textContent = 'Next';
+                nextBtn.onclick = () => changeStep(1);
+            }
+        }
+
+        function updateProgress() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        function submitForm() {
+            const form = document.getElementById('questionnaireForm');
+            const formData = new FormData(form);
+
+            // Show loading
+            document.querySelector('.form-container').style.display = 'none';
+            document.getElementById('loadingDiv').style.display = 'block';
+
+            // Add user_id from session (you'll need to pass this from your PHP session)
+            // For now, we'll use a placeholder - replace this with actual session user_id
+            formData.append('user_id', getUserId());
+
+            // Send to PHP backend
+            fetch('save_profile.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redirect to dashboard
+                    window.location.href = 'dashboard.php';
+                } else {
+                    // Show error
+                    document.querySelector('.form-container').style.display = 'block';
+                    document.getElementById('loadingDiv').style.display = 'none';
+                    showError(data.message || 'Failed to save profile. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.querySelector('.form-container').style.display = 'block';
+                document.getElementById('loadingDiv').style.display = 'none';
+                showError('An error occurred. Please try again.');
+            });
+        }
+
+        // Helper function to get user_id - you should implement this based on your session
+        function getUserId() {
+            // This is a placeholder - you should get the actual user_id from your PHP session
+            // You can pass it via a hidden input or data attribute in the HTML
+            return document.body.dataset.userId || 1; // Default to 1 for testing
+        }
+    </script>
 </body>
 </html>
