@@ -713,7 +713,34 @@
                         </div>
                         <div class="option">
                             <input type="radio" id="time4" name="daily_time_commitment" value="20 min a day">
-            
+                            <label for="time4">20 min a day</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 18 -->
+                <div class="step" data-step="18">
+                    <div class="step-indicator">Step 18 of 20</div>
+                    <h2 class="question-title">How well can you stay focused?</h2>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="focus1" name="focus_ability" value="I'm good at staying focused" required>
+                            <label for="focus1">I'm good at staying focused</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="focus2" name="focus_ability" value="I try, but get distracted sometimes">
+                            <label for="focus2">I try, but get distracted sometimes</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="focus3" name="focus_ability" value="It's hard for me to stay on track">
+                            <label for="focus3">It's hard for me to stay on track</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="focus4" name="focus_ability" value="I procrastinate a lot">
+                            <label for="focus4">I procrastinate a lot</label>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Step 19 -->
                 <div class="step" data-step="19">
