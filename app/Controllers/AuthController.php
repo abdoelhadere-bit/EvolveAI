@@ -55,7 +55,7 @@ class AuthController
 
             $this->users->create($validated);
             
-            header("Location: " . URLROOT . "/home/view");
+            header("Location: " . URLROOT . "/questionaire/view");
             exit;
 
         } catch (Exception $e) {
