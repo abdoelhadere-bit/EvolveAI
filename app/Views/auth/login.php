@@ -57,7 +57,7 @@
         <p>Please log in to your account</p>
     </div>
 
-    <form action="/EvolveAI/auth/login" method="POST">
+    <form action="/EvolveAI/Views/auth/login" method="POST">
         
         <div class="form-group">
             <label for="email">Email Address</label>

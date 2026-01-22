@@ -2,11 +2,7 @@
 
 session_start();
 
-/*
-|--------------------------------------------------------------------------
-| Gemini 2.5 Flash Service via REST API
-|--------------------------------------------------------------------------
-*/
+
 class GeminiService
 {
     private static $apiKey;
@@ -95,11 +91,7 @@ PROMPT;
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Request Handling
-|--------------------------------------------------------------------------
-*/
+
 $input = json_decode(file_get_contents('php://input'), true);
 
 if (!is_array($input)) {
@@ -114,9 +106,7 @@ try {
     exit("Error generating plan: " . $e->getMessage());
 }
 
-// Persist last plan in session
 $_SESSION['daily_plan'] = $html;
 
-// Return HTML
 header('Content-Type: text/html; charset=UTF-8');
 echo $html;

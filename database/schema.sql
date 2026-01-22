@@ -1,4 +1,4 @@
--- Active: 1768302342360@@127.0.0.1@5432@evolveai
+-- Active: 1769070738822@@127.0.0.1@5432@evolveai
 DROP DATABASE IF EXISTS evolveai;
 
 CREATE DATABASE evolveai;
@@ -78,3 +78,5 @@ CREATE TABLE user_opportunities (
   UNIQUE (user_id, opportunity_id)
 );
 
+
+SELECT * FROM users;
