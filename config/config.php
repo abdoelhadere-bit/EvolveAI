@@ -1,13 +1,11 @@
 <?php
 
 return [
-        'driver'   => 'pgsql',
-        'host'     => '127.0.0.1',
-        'port'     => '5432',
-        'dbname'   => 'evolveai',
-        'username' => 'root',
-        'password' => 'root123'
-
+    'host'     => 'localhost',
+    'port'     => '5432',
+    'dbname'   => 'evolveai',
+    'username' => 'postgres',
+    'password' => 'salmane2001'
 ];
 
 ?>
