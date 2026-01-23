@@ -5,7 +5,7 @@ return [
     'port'     => '5432',
     'dbname'   => 'evolveai',
     'username' => 'postgres',
-    'password' => 'salmane2001'
+    'password' => 'abdo2007123'
 ];
 
 ?>

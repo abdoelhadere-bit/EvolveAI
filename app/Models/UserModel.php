@@ -39,5 +39,4 @@ class UserModel
     public function setPassword(?string $password) { $this->password_hash= $password; }
     public function setConfirmPassword(?string $confirm_password) { $this->password_confirm = $confirm_password; }
     public function setCreatedAt(?string $created_at) { $this->created_at = $created_at; }
-
 }

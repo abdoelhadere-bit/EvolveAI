@@ -37,6 +37,7 @@ class AuthController
         require_once '../app/Views/auth/signup.php';
     }
 
+
     public function getForgot()
     {
         require_once '../app/Views/auth/passwordreset.php';
@@ -88,7 +89,9 @@ class AuthController
             
             echo $e->getMessage();
         }
+
     }
+
 
     public function postLogin(): void
     {
