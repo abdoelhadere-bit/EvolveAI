@@ -80,7 +80,7 @@ class AuthController
                 throw new Exception("Email already exists.");
             }
 
-            $this->users->create($validated);
+            $_SESSION['user_id']= $this->users->create($validated);
             
             header("Location: " . URLROOT . "/questionaire/view");
             exit;

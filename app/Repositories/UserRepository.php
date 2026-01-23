@@ -24,12 +24,21 @@ class UserRepository
         return $user ?: null;
     }
 
-    public function create(UserModel $user):int
+    public function create(UserModel $user): int
     {
-        $insertingUser = $this->db->prepare("INSERT INTO users (full_name, email, password_hash)
-                                            VALUES (?,?,?)");
-        $insertingUser->execute([$user->getFname(), $user->getEmail(), $user->getPassword()]);
-        return (int) $this->db->lastInsertId();
+        $stmt = $this->db->prepare(
+            "INSERT INTO users (full_name, email, password_hash)
+            VALUES (:name, :email, :pass)
+            RETURNING id"
+        );
+
+        $stmt->execute([
+            'name'  => $user->getFname(),
+            'email' => $user->getEmail(),
+            'pass'  => $user->getPassword()
+        ]);
+
+        return (int) $stmt->fetchColumn();
     }
 
     public function updatePassword(int $userId, string $newHashedPassword): bool
