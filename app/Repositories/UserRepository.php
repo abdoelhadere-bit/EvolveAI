@@ -16,7 +16,7 @@ class UserRepository
     }
 
     public function findByEmail(string $email): ?UserModel {
-        $selectUser = $this->db->prepare("SELECT id, full_name, password_hash FROM users WHERE email = ?");
+        $selectUser = $this->db->prepare("SELECT id, full_name, password_hash, email FROM users WHERE email = ?");
         $selectUser->execute([$email]);
         $selectUser->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE , UserModel::class, [null, null, null, null, null]);
         $user= $selectUser->fetch();
@@ -31,6 +31,22 @@ class UserRepository
         $insertingUser->execute([$user->getFname(), $user->getEmail(), $user->getPassword()]);
     }
 
+    public function updatePassword(int $userId, string $newHashedPassword): bool
+    {
+        
+        $sql = "UPDATE users SET password_hash = :password WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindValue(':password', $newHashedPassword);
+        $stmt->bindValue(':id', $userId);
+
+        if ($stmt->execute()) {
+            return $stmt->rowCount() > 0;
+        }
+
+        return false;
+    }
 }
 
 ?>

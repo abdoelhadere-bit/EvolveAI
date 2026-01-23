@@ -9,7 +9,11 @@ header("Access-Control-Allow-Origin: *");
 
 define('URLROOT', 'http://localhost/EvolveAi');
 
+Dotenv\Dotenv::createImmutable(__DIR__ . '/../')->load();
+
 use App\Core\Router;
+
+session_start();
 
 $router= new Router();
 ?>
