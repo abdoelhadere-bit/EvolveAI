@@ -79,4 +79,8 @@ CREATE TABLE user_opportunities (
 );
 
 
-SELECT * FROM users;
+ALTER TABLE users ADD COLUMN answers JSONB;
+
+SELECT * FROM daily_plans;
+
+ALTER TABLE daily_plans ADD COLUMN html_content TEXT NOT NULL;

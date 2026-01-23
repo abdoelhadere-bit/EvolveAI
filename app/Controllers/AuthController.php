@@ -31,38 +31,46 @@ class AuthController
         require_once '../app/Views/auth/signup.php';
     }
 
-    public function postSignup(): void
-    {
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-                $user= new userModel (
-                    null,
-                    $_POST['full_name']? $_POST['full_name'] : null,
-                    $_POST['email']? $_POST['email'] : null,
-                    $_POST['password'] ? $_POST['password'] : null,
-                    null,
-                    $_POST['confirm_password'] ? $_POST['confirm_password'] : null
-                );
-            }
-
-        try {
-            
-            $validated = $this->signupValidator->validate($user);
-
-            if ($this->users->findByEmail($validated->getEmail())) {
-                throw new Exception("Email already exists.");
-            }
-
-            $this->users->create($validated);
-            
-            header("Location: " . URLROOT . "/home/view");
-            exit;
-
-        } catch (Exception $e) {
-            
-            echo $e->getMessage();
-        }
+public function postSignup(): void
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        return;
     }
+
+    try {
+        $user = new UserModel(
+            null,
+            $_POST['full_name'] ?? null,
+            $_POST['email'] ?? null,
+            $_POST['password'] ?? null,
+            null,
+            $_POST['confirm_password'] ?? null
+        );
+
+        $validated = $this->signupValidator->validate($user);
+
+        if ($this->users->findByEmail($validated->getEmail())) {
+            throw new Exception("Email already exists.");
+        }
+
+        // Create user and retrieve ID
+        $userId = $this->users->create($validated);
+
+        // 🔑 START SESSION AND SAVE USER ID
+        session_start();
+        session_regenerate_id(true);
+
+        $_SESSION['user_id'] = $userId;
+        $_SESSION['login_time'] = time();
+
+        header("Location: " . URLROOT . "/questionaire/view");
+        exit;
+
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
+
 
     public function postLogin(): void
     {

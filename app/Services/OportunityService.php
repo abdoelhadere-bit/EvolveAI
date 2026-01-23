@@ -189,7 +189,7 @@ try {
     // Example: user-submitted interests from a form
     $userInterests = $_POST['interests'] ?? ['technology', 'business', 'marketing'];
 
-    $generator = new GeminiPlanGenerator('AIzaSyCCCX43ElSOhFdpquzpAeJ6NB5kIEcRSRo');
+    $generator = new GeminiPlanGenerator('AIzaSyC_1XL9ORZNMbcugfCVslNTB9ce9l8D9v8');
     $generator->generateDailyOpportunities($userInterests);
 } catch (Throwable $e) {
     http_response_code(500);
