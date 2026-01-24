@@ -7,7 +7,7 @@ require_once '../vendor/autoload.php';
 
 header("Access-Control-Allow-Origin: *");
 
-define('URLROOT', 'http://localhost/EvolveAi');
+define('URLROOT', 'http://localhost/EvolveAI');
 
 use App\Core\Router;
 

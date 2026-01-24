@@ -56,14 +56,13 @@ public function postSignup(): void
         // Create user and retrieve ID
         $userId = $this->users->create($validated);
 
-        // 🔑 START SESSION AND SAVE USER ID
         session_start();
         session_regenerate_id(true);
 
         $_SESSION['user_id'] = $userId;
         $_SESSION['login_time'] = time();
 
-        header("Location: " . URLROOT . "/questionaire/view");
+        header("Location: /EvolveAI/public/index.php?url=questionaire/view");
         exit;
 
     } catch (Exception $e) {
@@ -110,7 +109,7 @@ public function postSignup(): void
             
             $_SESSION['login_time']= time();
 
-            header("Location: " . URLROOT . "/home/view");
+            header("Location: " . URLROOT . "/EvolveAI/public/index.php?url=dashboard/view");
             exit;
 
         } catch (Exception $e) {

@@ -22,10 +22,8 @@ class Router
             unset($url[0]);
         }
 
-        // 2️⃣ Instantiate controller (NO try/catch silent)
         $controller = new $this->controllerClass();
 
-        // 3️⃣ Resolve method
         if (!empty($url[1])) {
             $candidateMethod = $httpMethod . ucfirst($url[1]);
             if (method_exists($controller, $candidateMethod)) {
@@ -34,10 +32,9 @@ class Router
             }
         }
 
-        // 4️⃣ Params
         $this->params = array_values($url);
 
-        // 5️⃣ Safe call
+        // Safe call
         if (!is_callable([$controller, $this->method])) {
             $this->handleNotFound();
         }

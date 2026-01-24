@@ -23,16 +23,16 @@ final class QuestionaireController
     public function postStore(): void
     {
         try {
-            // 1. Save questionnaire answers
+            // Save questionnaire answers
             $this->profileService->saveUserResponse($_POST);
 
-            // 2. Redirect to AI generation controller
-            header('Location: /EvolveAi/response/generate');
+            // Redirect to AI generation controller
+            header('Location: /EvolveAI/public/index.php?url=response/generate');
             exit;
 
         } catch (\Throwable $e) {
             header(
-                'Location: /EvolveAi/questionaire/view?error=' .
+                'Location: /EvolveAI/public/index.php?url=questionaire/view?error=' .
                 urlencode($e->getMessage())
             );
             exit;

@@ -18,7 +18,7 @@ final class ResponseController
         $answers = $responseModel->getAnswersByUserId($userId);
 
         if (!$answers) {
-            header('Location: /EvolveAi/questionaire/view');
+            header('Location: /EvolveAI/public/index.php?url=/questionaire/view');
             exit;
         }
 
@@ -36,7 +36,7 @@ final class ResponseController
         $planModel = new DailyPlanModel();
         $planModel->saveTodayPlan($userId, $html);
 
-        header('Location: /EvolveAi/dashboard/view');
+        header('Location: /EvolveAI/public/index.php?url=dashboard/view');
         exit;
     }
 
@@ -76,7 +76,7 @@ final class ResponseController
 
         $planModel->saveTodayPlan($userId, $finalHtml);
 
-        header('Location: /EvolveAi/dashboard/view');
+        header('Location: /EvolveAI/public/index.php?url=dashboard/view');
         exit;
     }
 

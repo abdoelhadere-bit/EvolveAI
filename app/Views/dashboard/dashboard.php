@@ -28,23 +28,23 @@
         </div>
 
         <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1">
-            <a href="/EvolveAi/dashboard/view" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg bg-blue-50 text-blue-700">
+            <a href="/EvolveAI/public/index.php?url=dashboard/view" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg bg-blue-50 text-blue-700">
                 <i class="ph ph-squares-four text-lg mr-3"></i>
                 Dashboard
             </a>
 
-            <a href="/EvolveAi/feedback" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+            <a href="/EvolveAI/public/index.php?url=feedback/index" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
                 <i class="ph ph-chat-centered-text text-lg mr-3"></i>
                 Feedback
             </a>
 
-            <a href="/EvolveAi/articles" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+            <a href="/EvolveAI/public/index.php?url=articles/index" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
                 <i class="ph ph-article text-lg mr-3"></i>
                 AI Articles
                 <span class="ml-auto bg-gray-100 text-xs py-0.5 px-2 rounded-full text-gray-600 group-hover:bg-gray-200">New</span>
             </a>
 
-            <a href="/EvolveAi/community" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+            <a href="/EvolveAI/public/index.php?url=community/index" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
                 <i class="ph ph-users text-lg mr-3"></i>
                 Community
             </a>
@@ -59,7 +59,7 @@
                     <p class="text-sm font-medium text-gray-900 truncate">My Account</p>
                     <p class="text-xs text-gray-500 truncate">Free Plan</p>
                 </div>
-                <a href="/EvolveAi/logout" class="text-gray-400 hover:text-red-600 transition-colors">
+                <a href="/EvolveAI/public/index.php?url=logout" class="text-gray-400 hover:text-red-600 transition-colors">
                     <i class="ph ph-sign-out text-lg"></i>
                 </a>
             </div>
@@ -93,7 +93,7 @@
                     <p class="text-gray-500 max-w-md mb-8">
                         Your dashboard is waiting. Generate a personalized daily plan to unlock your potential.
                     </p>
-                    <a href="/EvolveAi/questionaire/view" 
+                    <a href="/EvolveAI/public/index.php?url=questionaire/view" 
                        class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl shadow-lg shadow-blue-600/20 transition-all hover:scale-105">
                         <i class="ph ph-magic-wand mr-2 text-lg"></i>
                         Generate Today's Plan

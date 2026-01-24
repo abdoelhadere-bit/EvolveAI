@@ -6,8 +6,8 @@ use RuntimeException;
 
 final class ResponseService
 {
-    private const MODEL = 'gemini-3-flash-preview'; // Ensure you use a valid model name
-    private static string $apiKey = 'AIzaSyD9sr3yPAhpd_-f_-Z0AnR_-akwMBTrDQM';
+    private const MODEL = 'gemini-3-flash-preview';
+    private static string $apiKey = 'AIzaSyBIaS9ZAiAfyWKYGIiVJO3vFstE5bV0Zec';
 
     private static function buildUrl(): string
     {
@@ -64,106 +64,103 @@ final class ResponseService
         return trim($html);
     }
 
-    // =========================================================================
-    // METHOD 1: GENERATE OPPORTUNITIES
-    // =========================================================================
+    // GENERATE OPPORTUNITIES
+    
     public static function generateOpportunities(array $userProfile): string
     {
         $inputJson = json_encode($userProfile, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
 
         $prompt = <<<PROMPT
-You are an Elite Career Strategist. Analyze these user skills:
-$inputJson
+            You are an Elite Career Strategist. Analyze these user skills:
+            $inputJson
 
-Identify 4 HIGH-VALUE, CONCRETE income opportunities.
+            Identify 6 HIGH-VALUE, CONCRETE income opportunities.
 
-OUTPUT REQUIREMENTS:
-- **Output ONLY HTML content (divs).**
-- **Design:** Modern Grid layout (Tailwind CSS).
-- **Cards:** White bg, shadow-sm, rounded-xl, padding-6.
-- **Content:** Title, Earnings Potential, and "Why it fits".
-- **Action:**
-  <form action="/EvolveAi/response/plan" method="POST">
-      <input type="hidden" name="opportunity_title" value="...">
-      <input type="hidden" name="opportunity_desc" value="...">
-      <input type="hidden" name="opportunity_context" value="...">
-      <button type="submit" class="w-full mt-4 bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-700 transition-colors">
-          Generate Action Plan
-      </button>
-  </form>
-PROMPT;
+            OUTPUT REQUIREMENTS:
+            - **Output ONLY HTML content (divs).**
+            - **Design:** Modern Grid layout (Tailwind CSS).
+            - **Cards:** White bg, shadow-sm, rounded-xl, padding-6.
+            - **Content:** Title, Earnings Potential, and "Why it fits".
+            - **Action:**
+              <form action="/EvolveAI/public/index.php?url=response/plan" method="POST">
+                  <input type="hidden" name="opportunity_title" value="...">
+                  <input type="hidden" name="opportunity_desc" value="...">
+                  <input type="hidden" name="opportunity_context" value="...">
+                  <button type="submit" class="w-full mt-4 bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                      Generate Action Plan
+                  </button>
+              </form>
+            PROMPT;
 
         return self::makeApiCall($prompt);
     }
 
-    // =========================================================================
-    // METHOD 2: GENERATE EXECUTION PLAN (Dynamic & Interactive)
-    // =========================================================================
+    // GENERATE EXECUTION PLAN 
     public static function generateExecutionPlan(array $selectedData, int $dayNumber = 1): string
     {
         $opportunityJson = json_encode($selectedData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
 
         $prompt = <<<PROMPT
-You are an expert Productivity Coach.
-The user is on **DAY $dayNumber** of their journey.
+        You are an expert Productivity Coach.
+        The user is on **DAY $dayNumber** of their journey.
 
-Selected Opportunity:
-$opportunityJson
+        Selected Opportunity:
+        $opportunityJson
 
-Create a **Dynamic Action Plan Dashboard** for **DAY $dayNumber**.
+        Create a **Dynamic Action Plan Dashboard** for **DAY $dayNumber**.
 
-### CONTEXT & DIFFICULTY:
-- **If Day 1:** Focus on setup, research, and quick wins.
-- **If Day 2-7:** Focus on skill acquisition and first outreach.
-- **If Day 8+:** Focus on scaling, optimization, and monetization.
-- **Tone:** highly motivational but strict.
+        ### CONTEXT & DIFFICULTY:
+        - **If Day 1:** Focus on setup, research, and quick wins.
+        - **If Day 2-7:** Focus on skill acquisition and first outreach.
+        - **If Day 8+:** Focus on scaling, optimization, and monetization.
+        - **Tone:** highly motivational but strict.
 
-### STRUCTURE:
-1.  **Header:** Title "DAY $dayNumber", Motivational Quote, and a **Progress Bar** (id="progress-fill").
-2.  **Monthly Goal:** The big picture.
-3.  **Weekly Sprint:** This week's specific focus.
-4.  **Daily Tasks (The Core):**
-    - Create 4-6 actionable tasks.
-    - **HTML Structure per Task:**
-      <div class="flex items-start p-3 bg-white border rounded-lg mb-2">
-         <input type="checkbox" class="task-checkbox h-5 w-5 text-blue-600 mt-1 mr-3 rounded" />
-         <div class="flex-1">
-             <h4 class="font-medium text-gray-900">[Task Title]</h4>
-             <p class="text-xs text-gray-500">[Skill Tag] • [Est. Time]</p>
-         </div>
-         <button class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 hover:bg-gray-200">Verify</button>
-      </div>
+        ### STRUCTURE:
+        1.  **Header:** Title "DAY $dayNumber", Motivational Quote, and a **Progress Bar** (id="progress-fill").
+        2.  **Monthly Goal:** The big picture.
+        3.  **Weekly Sprint:** This week's specific focus.
+        4.  **Daily Tasks (The Core):**
+            - Create 4-6 actionable tasks.
+            - **HTML Structure per Task:**
+              <div class="flex items-start p-3 bg-white border rounded-lg mb-2">
+                 <input type="checkbox" class="task-checkbox h-5 w-5 text-blue-600 mt-1 mr-3 rounded" />
+                 <div class="flex-1">
+                     <h4 class="font-medium text-gray-900">[Task Title]</h4>
+                     <p class="text-xs text-gray-500">[Skill Tag] • [Est. Time]</p>
+                 </div>
+                 <button class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 hover:bg-gray-200">Verify</button>
+              </div>
 
-### REQUIREMENTS:
-- **Output ONLY HTML.**
-- **Use Tailwind CSS.**
-- **Include this Script at the end:**
-<script>
-  (function(){
-      const boxes = document.querySelectorAll('.task-checkbox');
-      const bar = document.getElementById('progress-fill');
-      const text = document.getElementById('progress-text');
-      
-      function update() {
-          const total = boxes.length;
-          const checked = document.querySelectorAll('.task-checkbox:checked').length;
-          const pct = total ? Math.round((checked/total)*100) : 0;
-          if(bar) bar.style.width = pct + '%';
-          if(text) text.innerText = pct + '% Completed';
-          localStorage.setItem('plan_progress_day_$dayNumber', pct);
-      }
-      
-      boxes.forEach(b => b.addEventListener('change', update));
-      // Load saved state
-      const saved = localStorage.getItem('plan_progress_day_$dayNumber');
-      if(saved && bar) { 
-          bar.style.width = saved + '%'; 
-          if(text) text.innerText = saved + '% Completed';
-      }
-  })();
-</script>
-PROMPT;
+        ### REQUIREMENTS:
+        - **Output ONLY HTML.**
+        - **Use Tailwind CSS.**
+        - **Include this Script at the end:**
+        <script>
+          (function(){
+              const boxes = document.querySelectorAll('.task-checkbox');
+              const bar = document.getElementById('progress-fill');
+              const text = document.getElementById('progress-text');
 
+              function update() {
+                  const total = boxes.length;
+                  const checked = document.querySelectorAll('.task-checkbox:checked').length;
+                  const pct = total ? Math.round((checked/total)*100) : 0;
+                  if(bar) bar.style.width = pct + '%';
+                  if(text) text.innerText = pct + '% Completed';
+                  localStorage.setItem('plan_progress_day_$dayNumber', pct);
+              }
+
+              boxes.forEach(b => b.addEventListener('change', update));
+              // Load saved state
+              const saved = localStorage.getItem('plan_progress_day_$dayNumber');
+              if(saved && bar) { 
+                  bar.style.width = saved + '%'; 
+                  if(text) text.innerText = saved + '% Completed';
+              }
+          })();
+        </script>
+        PROMPT;
+            
         return self::makeApiCall($prompt);
     }
 

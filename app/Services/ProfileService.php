@@ -32,11 +32,7 @@ final class ProfileService
 
         $jsonAnswers = json_encode($data, JSON_THROW_ON_ERROR);
 
-        $sql = "
-    UPDATE users
-    SET answers = :answers
-    WHERE id = :user_id
-";
+        $sql = "UPDATE users SET answers = :answers WHERE id = :user_id";
 
 
         $stmt = $this->db->prepare($sql);

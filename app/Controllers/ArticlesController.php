@@ -65,7 +65,7 @@ final class ArticlesController
             }
         }
 
-        header('Location: /EvolveAi/articles');
+        header('Location: /EvolveAI/public/index.php?url=article/index');
         exit;
     }
 
@@ -73,7 +73,7 @@ final class ArticlesController
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /EvolveAi/login');
+            header('Location: /EvolveAI/public/index.php?url=auth/login');
             exit;
         }
     }

@@ -92,6 +92,6 @@ CREATE TABLE articles (
 
 ALTER TABLE users ADD COLUMN answers JSONB;
 
-SELECT * FROM daily_plans;
+SELECT * FROM users;
 
 ALTER TABLE daily_plans ADD COLUMN html_content TEXT NOT NULL;

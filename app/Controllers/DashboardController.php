@@ -15,18 +15,17 @@ final class DashboardController
         $userId = $_SESSION['user_id'] ?? null;
 
         if (!$userId) {
-            header('Location: /EvolveAi/login');
+            header('Location: /EvolveAI/public/index.php?url=auth/login');
             exit;
         }
 
         $model = new DailyPlanModel();
         
-        // WE NAME THE VARIABLE $dailyPlanHtml HERE:
         $dailyPlanHtml = $model->getTodayPlan($userId);
 
         // If no plan exists, force redirect to questionnaire
         if (!$dailyPlanHtml) {
-            header('Location: /EvolveAi/questionaire/view');
+            header('Location: /EvolveAi/public/index.php?url=questionaire/view');
             exit;
         }
 

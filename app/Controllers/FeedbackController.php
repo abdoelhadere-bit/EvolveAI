@@ -53,7 +53,7 @@ final class FeedbackController
             }
         }
 
-        header('Location: /EvolveAi/feedback');
+        header('Location: /EvolveAI/public/index.php?url=feedback/index');
         exit;
     }
 
@@ -61,7 +61,7 @@ final class FeedbackController
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /EvolveAi/login');
+            header('Location: /EvolveAI/public/index.php?url=auth/login');
             exit;
         }
     }
