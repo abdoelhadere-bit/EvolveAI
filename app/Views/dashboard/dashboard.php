@@ -1,68 +1,121 @@
 <?php
 /** * @var string|null $dailyPlanHtml 
  */
+?>
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | EvolveAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="h-full overflow-hidden flex">
 
-if (!empty($dailyPlanHtml)) {
-    // 1. If the AI generated content exists, display it.
-    echo $dailyPlanHtml;
-
-} else {
-    // 2. Professional "Empty State" Fallback
-    ?>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dashboard | EvolveAI</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-        <style>
-            body { font-family: 'Inter', sans-serif; }
-        </style>
-    </head>
-    <body class="bg-gray-50 h-screen flex flex-col">
+    <aside class="hidden md:flex flex-col w-64 bg-white border-r border-gray-200 text-gray-600 transition-all duration-300">
         
-        <nav class="bg-white border-b border-gray-200 px-4 py-3">
-            <div class="max-w-7xl mx-auto flex justify-between items-center">
-                <span class="text-xl font-bold text-gray-900 tracking-tight">Evolve<span class="text-blue-600">AI</span></span>
-            </div>
+        <div class="h-16 flex items-center px-6 border-b border-gray-100">
+            <span class="text-xl font-bold tracking-tight text-gray-900">
+                Evolve<span class="text-blue-600">AI</span>
+            </span>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1">
+            <a href="/EvolveAi/dashboard/view" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg bg-blue-50 text-blue-700">
+                <i class="ph ph-squares-four text-lg mr-3"></i>
+                Dashboard
+            </a>
+
+            <a href="/EvolveAi/feedback" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                <i class="ph ph-chat-centered-text text-lg mr-3"></i>
+                Feedback
+            </a>
+
+            <a href="/EvolveAi/articles" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                <i class="ph ph-article text-lg mr-3"></i>
+                AI Articles
+                <span class="ml-auto bg-gray-100 text-xs py-0.5 px-2 rounded-full text-gray-600 group-hover:bg-gray-200">New</span>
+            </a>
+
+            <a href="/EvolveAi/community" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                <i class="ph ph-users text-lg mr-3"></i>
+                Community
+            </a>
         </nav>
 
-        <div class="flex-1 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8">
-            <div class="max-w-md w-full text-center">
+        <div class="p-4 border-t border-gray-100 bg-gray-50">
+            <div class="flex items-center gap-3">
+                <div class="h-9 w-9 rounded-full bg-white border border-gray-200 flex items-center justify-center text-xs font-bold text-blue-600 shadow-sm">
+                    ME
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-900 truncate">My Account</p>
+                    <p class="text-xs text-gray-500 truncate">Free Plan</p>
+                </div>
+                <a href="/EvolveAi/logout" class="text-gray-400 hover:text-red-600 transition-colors">
+                    <i class="ph ph-sign-out text-lg"></i>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col h-full bg-gray-50 overflow-hidden">
+        
+        <header class="md:hidden bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 sticky top-0 z-10">
+            <span class="text-lg font-bold text-gray-900">EvolveAI</span>
+            <button class="text-gray-500 p-2 hover:bg-gray-100 rounded-md">
+                <i class="ph ph-list text-2xl"></i>
+            </button>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 sm:p-8 relative">
+            
+            <?php if (!empty($dailyPlanHtml)): ?>
                 
-                <div class="mx-auto flex items-center justify-center h-24 w-24 rounded-full bg-blue-50 mb-6">
-                    <svg class="h-12 w-12 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                    </svg>
+                <div class="max-w-7xl mx-auto animate-fade-in-up">
+                    <?= $dailyPlanHtml ?>
                 </div>
 
-                <h2 class="text-3xl font-bold text-gray-900 tracking-tight mb-3">
-                    Ready to start your day?
-                </h2>
-                
-                <p class="text-base text-gray-500 mb-8 max-w-sm mx-auto">
-                    You haven't generated a plan for today yet. Tell us about your goals, and let AI build your schedule.
-                </p>
+            <?php else: ?>
 
-                <div class="flex justify-center gap-4">
+                <div class="h-full flex flex-col items-center justify-center text-center">
+                    <div class="w-20 h-20 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 border border-gray-100">
+                        <i class="ph ph-rocket-launch text-4xl text-blue-600"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Let's plan your success</h2>
+                    <p class="text-gray-500 max-w-md mb-8">
+                        Your dashboard is waiting. Generate a personalized daily plan to unlock your potential.
+                    </p>
                     <a href="/EvolveAi/questionaire/view" 
-                       class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:-translate-y-0.5">
-                        <svg class="mr-2 -ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                        Generate New Plan
+                       class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl shadow-lg shadow-blue-600/20 transition-all hover:scale-105">
+                        <i class="ph ph-magic-wand mr-2 text-lg"></i>
+                        Generate Today's Plan
                     </a>
                 </div>
 
-                <p class="mt-8 text-xs text-gray-400 uppercase tracking-widest">
-                    Powered by Gemini 2.5 Flash
-                </p>
+            <?php endif; ?>
+
+        </main>
+
+        <footer class="bg-white border-t border-gray-200 py-4 px-8">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
+                <p>&copy; <?= date('Y') ?> EvolveAI. All rights reserved.</p>
+                <div class="flex gap-4 mt-2 md:mt-0">
+                    <a href="#" class="hover:text-gray-600 transition-colors">Privacy</a>
+                    <a href="#" class="hover:text-gray-600 transition-colors">Terms</a>
+                    <a href="#" class="hover:text-gray-600 transition-colors">Help</a>
+                </div>
             </div>
-        </div>
-    </body>
-    </html>
-<?php 
-} 
-?>
+        </footer>
+
+    </div>
+
+</body>
+</html>

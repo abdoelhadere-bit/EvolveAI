@@ -79,6 +79,17 @@ CREATE TABLE user_opportunities (
 );
 
 
+CREATE TABLE articles (
+    id         BIGSERIAL PRIMARY KEY,
+    user_id    BIGINT NOT NULL,
+    title      VARCHAR(255) NOT NULL,
+    content    TEXT NOT NULL,
+    links      TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+
 ALTER TABLE users ADD COLUMN answers JSONB;
 
 SELECT * FROM daily_plans;
