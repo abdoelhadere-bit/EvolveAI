@@ -154,7 +154,7 @@
     </form>
 
     <div class="form-footer">
-        Already have an account? <a href="#">Log In</a>
+        Already have an account? <a href="/EvolveAI/auth/login">Log In</a>
     </div>
 </div>
 
