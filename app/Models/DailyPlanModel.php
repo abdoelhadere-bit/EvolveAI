@@ -14,25 +14,26 @@ final class DailyPlanModel
         $this->db = Database::getConnection();
     }
 
+    // NEW: Count how many plans the user has generated before
+    public function getPlanCount(int $userId): int
+    {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM daily_plans WHERE user_id = :user_id");
+        $stmt->execute([':user_id' => $userId]);
+        return (int) $stmt->fetchColumn();
+    }
+
     public function saveTodayPlan(int $userId, string $html): void
     {
-        // 1. First, delete any existing plan for today 
-        // (This prevents the "Duplicate" error and works on ALL databases)
-        $deleteSql = "
-            DELETE FROM daily_plans 
-            WHERE user_id = :user_id 
-              AND plan_date = CURRENT_DATE
-        ";
-        
+        // 1. Delete existing plan for today to avoid conflicts
+        $deleteSql = "DELETE FROM daily_plans WHERE user_id = :user_id AND plan_date = CURRENT_DATE";
         $stmt = $this->db->prepare($deleteSql);
         $stmt->execute([':user_id' => $userId]);
 
-        // 2. Now, insert the new plan
+        // 2. Insert new plan
         $insertSql = "
             INSERT INTO daily_plans (user_id, plan_date, html_content)
             VALUES (:user_id, CURRENT_DATE, :plan_content)
         ";
-
         $stmt = $this->db->prepare($insertSql);
         $stmt->execute([
             ':user_id' => $userId,
@@ -48,7 +49,6 @@ final class DailyPlanModel
             WHERE user_id = :user_id
               AND plan_date = CURRENT_DATE
         ");
-
         $stmt->execute([':user_id' => $userId]);
 
         return $stmt->fetchColumn() ?: null;
