@@ -1,4 +1,4 @@
--- Active: 1768302342360@@127.0.0.1@5432@evolveai
+-- Active: 1769070738822@@127.0.0.1@5432@evolveai
 DROP DATABASE IF EXISTS evolveai;
 
 CREATE DATABASE evolveai;
@@ -27,6 +27,8 @@ CREATE TABLE user_profiles (
   past_experience TEXT,
   updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+DROP TABLE IF EXISTS user_profiles;
 
 CREATE TABLE daily_plans (
   id SERIAL PRIMARY KEY,
@@ -78,4 +80,18 @@ CREATE TABLE user_opportunities (
   UNIQUE (user_id, opportunity_id)
 );
 
+
+CREATE TABLE articles (
+    id         BIGSERIAL PRIMARY KEY,
+    user_id    BIGINT NOT NULL,
+    title      VARCHAR(255) NOT NULL,
+    content    TEXT NOT NULL,
+    links      TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+
+
+SELECT * FROM users;
 
