@@ -147,18 +147,10 @@ final class ResponseService
         return self::parseJson($jsonStr);
     }
 
-    // =========================================================================
-    // METHOD 3: GENERATE EDUCATIONAL ARTICLES (JSON Output)
-    // =========================================================================
-    // =========================================================================
-    // METHOD 3: GENERATE EDUCATIONAL ARTICLES (JSON Output)
-    // =========================================================================
     public static function generateArticlesContext(array|string $currentPlan): array
     {
-        // Handle structured plan (Array) vs legacy HTML (String)
         $planText = '';
         if (is_array($currentPlan)) {
-            // Convert tasks array to string context
             $tasks = $currentPlan['tasks'] ?? [];
             foreach ($tasks as $t) {
                 $planText .= "- Task: {$t['title']} ({$t['description']})\n";
@@ -168,30 +160,29 @@ final class ResponseService
         }
 
         $prompt = <<<PROMPT
-You are an AI Learning Assistant.
-Based on the user's daily plan below, generate 2 SHORT educational articles to help them achieve these specific tasks.
+            You are an AI Learning Assistant.
+            Based on the user's daily plan below, generate 2 SHORT educational articles to help them achieve these specific tasks.
 
-USER PLAN CONTEXT:
-$planText
+            USER PLAN CONTEXT:
+            $planText
 
-REQUIREMENTS:
-- Return ONLY valid JSON.
-- The JSON must be an array of objects.
-- Each object must have: "title", "content" (2-3 paragraphs, simple formatting), and "links" (a list of 2 relevant URL suggestions).
-- DO NOT use Markdown formatting in the response (no ```json).
-- Example format:
-[
-  {
-    "title": "Understanding MVC",
-    "content": "MVC stands for...",
-    "links": "https://wikipedia.org, https://youtube.com"
-  }
-]
-PROMPT;
-
+            REQUIREMENTS:
+            - Return ONLY valid JSON.
+            - The JSON must be an array of objects.
+            - Each object must have: "title", "content" (2-3 paragraphs, simple formatting), and "links" (a list of 2 relevant URL suggestions).
+            - DO NOT use Markdown formatting in the response (no ```json).
+            - Example format:
+            [
+                {
+                    "title": "Understanding MVC",
+                    "content": "MVC stands for...",
+                    "links": "https://wikipedia.org, https://youtube.com"
+                }
+            ]
+            PROMPT;
+                
         $jsonStr = self::makeApiCall($prompt);
 
-        // Sanitize if AI adds markdown fences despite instructions
         $jsonStr = preg_replace('/^```json/i', '', $jsonStr);
         $jsonStr = preg_replace('/^```/', '', $jsonStr);
         $jsonStr = preg_replace('/```$/', '', $jsonStr);
@@ -199,24 +190,15 @@ PROMPT;
         $data = json_decode($jsonStr, true);
 
         if (!is_array($data)) {
-            // Fallback if AI fails to give JSON
             return [];
         }
         
 
         return $data;
     }
-    // ... (Keep existing methods) ...
-
-    // =========================================================================
-    // METHOD 4: ANALYZE TASK SUBMISSION (Feedback Loop)
-    // =========================================================================
-    // =========================================================================
-    // METHOD 4: ANALYZE TASK SUBMISSION (Feedback Loop)
-    // =========================================================================
+ 
     public static function analyzeTaskSubmission(array|string $planContext, string $taskTitle, string $userWork): array
     {
-        // Handle structured plan (Array) vs legacy HTML (String)
         $contextClean = '';
         if (is_array($planContext)) {
              $tasks = $planContext['tasks'] ?? [];
@@ -228,30 +210,30 @@ PROMPT;
         }
 
         $prompt = <<<PROMPT
-You are a strict but encouraging AI Mentor.
-The user is submitting work for a task from their Daily Plan.
+            You are a strict but encouraging AI Mentor.
+            The user is submitting work for a task from their Daily Plan.
 
-CONTEXT (The User's Plan):
-$contextClean
+            CONTEXT (The User's Plan):
+            $contextClean
 
-THE TASK BEING SUBMITTED:
-"$taskTitle"
+            THE TASK BEING SUBMITTED:
+            "$taskTitle"
 
-THE USER'S WORK/SUBMISSION:
-"$userWork"
+            THE USER'S WORK/SUBMISSION:
+            "$userWork"
 
-YOUR GOAL:
-1. Evaluate if the work satisfies the task.
-2. Provide a score (0-100).
-3. Give specific, constructive feedback.
+            YOUR GOAL:
+            1. Evaluate if the work satisfies the task.
+            2. Provide a score (0-100).
+            3. Give specific, constructive feedback.
 
-OUTPUT JSON ONLY:
-{
-    "score": 85,
-    "feedback": "Great start! You correctly identified X, but you missed Y...",
-    "status": "approved" (or "needs_revision")
-}
-PROMPT;
+            OUTPUT JSON ONLY:
+            {
+                "score": 85,
+                "feedback": "Great start! You correctly identified X, but you missed Y...",
+                "status": "approved" (or "needs_revision")
+            }
+            PROMPT;
 
         $jsonStr = self::makeApiCall($prompt);
 
