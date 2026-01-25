@@ -84,6 +84,20 @@
         <p>We've sent a 6-digit code to your email. Please enter it below to confirm your identity.</p>
     </div>
 
+    <?php if (session_status() === PHP_SESSION_NONE) session_start(); ?>
+    <?php if (isset($_SESSION['error'])): ?>
+        <div style="background-color: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; border: 1px solid #fecaca;">
+            <?= htmlspecialchars($_SESSION['error']) ?>
+            <?php unset($_SESSION['error']); ?>
+        </div>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['success'])): ?>
+        <div style="background-color: #d1fae5; color: #047857; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; border: 1px solid #a7f3d0;">
+            <?= htmlspecialchars($_SESSION['success']) ?>
+            <?php unset($_SESSION['success']); ?>
+        </div>
+    <?php endif; ?>
+
     <form action="/EvolveAI/auth/verifyOTP" method="POST">
         
         <div class="otp-input-group">

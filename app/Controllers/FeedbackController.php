@@ -38,22 +38,18 @@ final class FeedbackController
             $userWork = $_POST['user_work'] ?? '';
 
             if (!empty($userWork)) {
-                // 1. Get Context (Today's Plan)
                 $planHtml = $this->planModel->getTodayPlan($userId) ?? 'No plan context';
 
-                // 2. Analyze with AI
                 $analysis = ResponseService::analyzeTaskSubmission($planHtml, $taskTitle, $userWork);
 
-                // 3. Save Result
                 try {
                     $this->feedbackModel->saveSubmission($userId, $taskTitle, $userWork, $analysis);
                 } catch (\Throwable $e) {
-                    // Log error
                 }
             }
         }
 
-        header('Location: /EvolveAi/feedback');
+        header('Location: /EvolveAI/public/index.php?url=feedback/index');
         exit;
     }
 
@@ -61,7 +57,7 @@ final class FeedbackController
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /EvolveAi/login');
+            header('Location: /EvolveAI/public/index.php?url=auth/login');
             exit;
         }
     }

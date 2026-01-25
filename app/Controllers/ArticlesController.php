@@ -21,19 +21,13 @@ final class ArticlesController
     {
         $this->checkAuth();
         $userId = (int) $_SESSION['user_id'];
-
-        // 1. AUTO-GENERATION LOGIC
-        // Check if we already have articles for today. If NOT, try to generate them.
         if (!$this->articleModel->hasGeneratedToday($userId)) {
             
-            // Get today's plan to use as context
             $todayPlan = $this->planModel->getTodayPlan($userId);
 
             if ($todayPlan) {
-                // Call AI to generate 2 articles based on the plan
                 $newArticles = ResponseService::generateArticlesContext($todayPlan);
 
-                // Save them to DB
                 foreach ($newArticles as $article) {
                     $this->articleModel->create(
                         $userId,
@@ -45,10 +39,8 @@ final class ArticlesController
             }
         }
 
-        // 2. Fetch all articles (New & Old)
         $articles = $this->articleModel->getAllByUserId($userId);
 
-        // 3. Render View
         require __DIR__ . '/../Views/dashboard/articles.php';
     }
 
@@ -65,7 +57,7 @@ final class ArticlesController
             }
         }
 
-        header('Location: /EvolveAi/articles');
+        header('Location: /EvolveAI/public/index.php?url=article/index');
         exit;
     }
 
@@ -73,7 +65,7 @@ final class ArticlesController
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /EvolveAi/login');
+            header('Location: /EvolveAI/public/index.php?url=auth/login');
             exit;
         }
     }

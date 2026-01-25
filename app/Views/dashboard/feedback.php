@@ -17,37 +17,7 @@
 </head>
 <body class="h-full overflow-hidden flex">
 
-    <aside class="hidden md:flex flex-col w-64 bg-white border-r border-gray-200 text-gray-600 transition-all duration-300">
-        <div class="h-16 flex items-center px-6 border-b border-gray-100">
-            <span class="text-xl font-bold tracking-tight text-gray-900">Evolve<span class="text-blue-600">AI</span></span>
-        </div>
-        
-        <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1">
-            <a href="/EvolveAi/dashboard/view" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-                <i class="ph ph-squares-four text-lg mr-3"></i> 
-                Dashboard
-            </a>
-            
-            <a href="/EvolveAi/feedback" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg bg-blue-50 text-blue-700 transition-colors">
-                <i class="ph ph-chat-centered-text text-lg mr-3"></i> 
-                Feedback
-            </a>
-            
-            <a href="/EvolveAi/articles" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-                <i class="ph ph-article text-lg mr-3"></i> 
-                AI Articles
-            </a>
-        </nav>
-        
-        <div class="p-4 border-t border-gray-100">
-            <div class="flex items-center gap-3">
-                <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-600">ME</div>
-                <div>
-                    <p class="text-xs font-medium text-gray-700">My Account</p>
-                </div>
-            </div>
-        </div>
-    </aside>
+    <?php require __DIR__ . '/../partials/sidebar.php'; ?>
 
     <div class="flex-1 flex flex-col h-full bg-gray-50 overflow-hidden">
         
@@ -71,7 +41,7 @@
                         <p class="text-sm text-gray-500 mt-1">Get instant AI feedback on your daily tasks.</p>
                     </div>
                     
-                    <form action="/EvolveAi/feedback/submit" method="POST" class="flex-1 flex flex-col space-y-4">
+                    <form action="/EvolveAI/public/index.php?url=feedback/submit" method="POST" class="flex-1 flex flex-col space-y-4">
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Task Title</label>

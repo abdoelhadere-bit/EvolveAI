@@ -52,8 +52,8 @@ class AuthController
     {
         if(isset($_SESSION['allow_new_password'] )&& $_SESSION['allow_new_password']===true) require_once '../app/Views/auth/newpassword.php';
         else {
-            $_SESSION["toast_error"] = "does not have access to change the password";
-            header("Location: " . URLROOT . "/auth/login");
+            $_SESSION['error'] = "does not have access to change the password";
+            header("Location: " . URLROOT . "/public/index.php?url=auth/login");
 
         }
     }
@@ -73,21 +73,31 @@ class AuthController
             }
 
         try {
+            if (session_status() === PHP_SESSION_NONE) session_start();
             
             $validated = $this->signupValidator->validate($user);
 
             if ($this->users->findByEmail($validated->getEmail())) {
-                throw new Exception("Email already exists.");
+                $_SESSION['error'] = "Email already exists. Please log in or use a different email.";
+                header("Location: /EvolveAI/public/index.php?url=auth/signup");
+                exit;
             }
 
-            $_SESSION['user_id']= $this->users->create($validated);
+            // Create user and retrieve ID
+            $userId = $this->users->create($validated);
             
-            header("Location: " . URLROOT . "/questionaire/view");
+            session_regenerate_id(true);
+            
+            $_SESSION['user_id'] = $userId;
+            $_SESSION['login_time'] = time();
+            
+            header("Location: /EvolveAI/public/index.php?url=questionaire/view");
             exit;
 
         } catch (Exception $e) {
-            
-            echo $e->getMessage();
+            $_SESSION['error'] = $e->getMessage();
+            header("Location: /EvolveAI/public/index.php?url=auth/signup");
+            exit;
         }
 
     }
@@ -95,46 +105,42 @@ class AuthController
 
     public function postLogin(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        try {
+            if (session_status() === PHP_SESSION_NONE) session_start();
 
-        
-            $user= new userModel (
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new Exception("Invalid request method.");
+            }
+
+            $user = new UserModel(
                 null,
                 null,
-                $_POST['email'],
-                $_POST['password'],
+                $_POST['email'] ?? null,
+                $_POST['password'] ?? null,
                 null,
                 null
             );
-
-        }
-
-        try {
             
             $credentials = $this->loginValidator->validate($user);
-
-            
-            $user = $this->users->findByEmail($credentials->getEmail());
-
+            $userFound = $this->users->findByEmail($credentials->getEmail());
              
-            if (!$user || !password_verify($credentials->getPassword(), $user->getPassword())) {
+            if (!$userFound || !password_verify($credentials->getPassword(), $userFound->getPassword())) {
                 throw new Exception("Invalid email or password.");
             }
 
-            session_start();
             session_regenerate_id(true);
 
-            $_SESSION['user_id'] = $user->getId();
-            
-            $_SESSION['login_time']= time();
+            $_SESSION['user_id'] = $userFound->getId();
+            $_SESSION['login_time'] = time();
 
-            header("Location: " . URLROOT . "/home/view");
+            header("Location: " . URLROOT . "/public/index.php?url=dashboard/view");
             exit;
 
         } catch (Exception $e) {
-            echo $e->getMessage();
-        
-    }
+            $_SESSION['error'] = $e->getMessage();
+            header("Location: " . URLROOT . "/public/index.php?url=auth/login");
+            exit;
+        }
     }
 
     public function postForgot()
@@ -151,8 +157,8 @@ class AuthController
                     }
                     catch (Exception $e) {
                 
-                        $_SESSION["toast_error"] = $e->getMessage();
-                        header("Location: " . URLROOT . "/auth/forgot");
+                        $_SESSION['error'] = $e->getMessage();
+                        header("Location: " . URLROOT . "/public/index.php?url=auth/forgot");
                         exit;
                     }
 
@@ -161,8 +167,8 @@ class AuthController
         }
         catch(Exception $e)
         {
-            $_SESSION["toast_error"] = $e->getMessage();
-            header("Location: " . URLROOT . "/auth/forgot");
+            $_SESSION['error'] = $e->getMessage();
+            header("Location: " . URLROOT . "/public/index.php?url=auth/forgot");
             exit;
         }
 
@@ -174,8 +180,8 @@ class AuthController
             else {   $this->verificationSteps($user); }
         }
         catch(Exception $e ){
-            $_SESSION["toast_error"] = $e->getMessage();
-            header("Location: " . URLROOT . "/auth/forgot");
+            $_SESSION['error'] = $e->getMessage();
+            header("Location: " . URLROOT . "/public/index.php?url=auth/forgot");
             exit;
         }
 
@@ -194,15 +200,15 @@ class AuthController
 
                     $_SESSION['allow_new_password']=true;
 
-                    header("Location: " . URLROOT . "/auth/newpassword");
+                    header("Location: " . URLROOT . "/public/index.php?url=auth/newpassword");
                     exit;
                 } catch (Exception $e) {
-                    $_SESSION['toast_error'] = "could not verify OTP, a new one will be sent".$e->getMessage();
+                    $_SESSION['error'] = "could not verify OTP, a new one will be sent".$e->getMessage();
                     $this->verificationSteps($user);
                     exit;
                 }
             }
-            else header("Location: " . URLROOT . "/auth/forgot");
+            else header("Location: " . URLROOT . "/public/index.php?url=auth/forgot");
         }
 
     }
@@ -222,7 +228,7 @@ class AuthController
         $_SESSION['OTP']= serialize($otpservice->getOTP($user->getId()));
         $_SESSION['user'] = serialize($user);
 
-        header("Location: " . URLROOT . "/auth/verifyOTP");
+        header("Location: " . URLROOT . "/public/index.php?url=auth/verifyOTP");
     }
 
     public function postNewPassword()
@@ -230,7 +236,7 @@ class AuthController
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
 
         if (!isset($_SESSION['allow_new_password'])) {
-            header("Location: " . URLROOT . "/auth/login");
+            header("Location: " . URLROOT . "/public/index.php?url=auth/login");
             exit;
         }
 
@@ -247,8 +253,8 @@ class AuthController
 
         } catch (Exception $e )
         {
-            $_SESSION['toast_error']= "failed to reset password". $e->getMessage();
-            header("Location: ". URLROOT. "/auth/newpassword");
+            $_SESSION['error']= "failed to reset password". $e->getMessage();
+            header("Location: ". URLROOT. "/public/index.php?url=auth/newpassword");
             exit;
         }
 
@@ -259,8 +265,8 @@ class AuthController
             unset($_SESSION['user']);
             unset($_SESSION['OTP']);
 
-            $_SESSION['toast_success']= "password updated successfully";
-            header("Location:".URLROOT."/auth/login");
+            $_SESSION['success']= "password updated successfully";
+            header("Location:".URLROOT."/public/index.php?url=auth/login");
             exit;
         }
     }
@@ -269,7 +275,7 @@ class AuthController
     {
         session_unset();
         session_destroy();
-        header("Location: " . URLROOT . "/landing");
+        header("Location: " . URLROOT . "/public/index.php?url=landing");
         exit;
     }
 }
