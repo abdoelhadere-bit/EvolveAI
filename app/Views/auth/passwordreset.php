@@ -56,7 +56,21 @@
         <p>Enter the email address associated with your account and we'll send you a link to reset your password.</p>
     </div>
 
-    <form action="/EvolveAI/auth/forgot" method="POST">
+    <?php if (session_status() === PHP_SESSION_NONE) session_start(); ?>
+    <?php if (isset($_SESSION['error'])): ?>
+        <div style="background-color: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; border: 1px solid #fecaca;">
+            <?= htmlspecialchars($_SESSION['error']) ?>
+            <?php unset($_SESSION['error']); ?>
+        </div>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['success'])): ?>
+        <div style="background-color: #d1fae5; color: #047857; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; border: 1px solid #a7f3d0;">
+            <?= htmlspecialchars($_SESSION['success']) ?>
+            <?php unset($_SESSION['success']); ?>
+        </div>
+    <?php endif; ?>
+
+    <form action="/EvolveAI/public/index.php?url=auth/forgot" method="POST">
         
         <div class="form-group">
             <label for="email">Email Address</label>
@@ -65,7 +79,7 @@
 
         <button type="submit" class="submit-btn">Send Reset Link</button>
         
-        <a href="/EvolveAI/auth/login" style="text-decoration: none;">
+        <a href="/EvolveAI/public/index.php?url=auth/login" style="text-decoration: none;">
             <button type="button" class="submit-btn cancel-btn">Back to Login</button>
         </a>
     </form>

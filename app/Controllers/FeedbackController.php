@@ -38,17 +38,13 @@ final class FeedbackController
             $userWork = $_POST['user_work'] ?? '';
 
             if (!empty($userWork)) {
-                // 1. Get Context (Today's Plan)
                 $planHtml = $this->planModel->getTodayPlan($userId) ?? 'No plan context';
 
-                // 2. Analyze with AI
                 $analysis = ResponseService::analyzeTaskSubmission($planHtml, $taskTitle, $userWork);
 
-                // 3. Save Result
                 try {
                     $this->feedbackModel->saveSubmission($userId, $taskTitle, $userWork, $analysis);
                 } catch (\Throwable $e) {
-                    // Log error
                 }
             }
         }

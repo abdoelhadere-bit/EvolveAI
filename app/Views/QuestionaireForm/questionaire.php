@@ -115,6 +115,13 @@
         <div class="option"><input type="checkbox" name="skills[]" value="coding"><label>Coding / Tech</label></div>
         <div class="option"><input type="checkbox" name="skills[]" value="marketing"><label>Marketing / Ads</label></div>
         <div class="option"><input type="checkbox" name="skills[]" value="none"><label>None yet</label></div>
+        <div class="option">
+            <input type="checkbox" name="skills[]" value="other" onchange="toggleOther(this, 'checkbox')">
+            <label>Other (please specify)</label>
+        </div>
+    </div>
+    <div class="other-input-container" id="skills_other_container">
+        <input type="text" name="skills_other" class="custom-text-input" placeholder="e.g. Video Editing, Sales...">
     </div>
 </div>
 
@@ -174,6 +181,13 @@
         <div class="option"><input type="radio" name="monetization" value="products"><label>Digital products</label></div>
         <div class="option"><input type="radio" name="monetization" value="content"><label>Content / Audience</label></div>
         <div class="option"><input type="radio" name="monetization" value="automation"><label>AI / Automation</label></div>
+        <div class="option">
+             <input type="radio" name="monetization" value="other" onchange="toggleOther(this, 'radio')">
+             <label>Other</label>
+        </div>
+    </div>
+    <div class="other-input-container" id="monetization_other_container">
+        <input type="text" name="monetization_other" class="custom-text-input" placeholder="Please specify...">
     </div>
 </div>
 
@@ -237,22 +251,29 @@
   let currentStep = 1;
   const totalSteps = document.querySelectorAll('.step').length;
 
-  function toggleOther(radio) {
-    const container = document.getElementById(radio.name + '_other_container');
+  function toggleOther(input, type) {
+    // Determine the container ID based on the input name
+    // For arrays like skills[], name is skills[], so we strip []
+    const baseName = input.name.replace('[]', '');
+    const container = document.getElementById(baseName + '_other_container');
+    
     if (!container) return;
 
-    if (radio.checked) {
+    if (input.checked) {
       container.style.display = 'block';
-      const input = container.querySelector('input, textarea');
-      if (input) input.focus();
+      const textInput = container.querySelector('input, textarea');
+      if (textInput) textInput.focus();
+    } else if (type === 'checkbox') {
+       container.style.display = 'none';
     }
   }
 
-  // Hide other when a regular option is chosen
+  // Hide other when a regular radio option is chosen
   document.querySelectorAll('input[type="radio"]').forEach(radio => {
     radio.addEventListener('change', function () {
       if (this.value !== 'other') {
-        const container = document.getElementById(this.name + '_other_container');
+        const baseName = this.name;
+        const container = document.getElementById(baseName + '_other_container');
         if (container) container.style.display = 'none';
       }
     });

@@ -57,7 +57,16 @@
         <p>Please log in to your account</p>
     </div>
 
-    <form action="/EvolveAI/auth/login" method="POST">
+    <?php 
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    if (isset($_SESSION['error'])): ?>
+        <div style="background-color: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; border: 1px solid #fecaca;">
+            <?= htmlspecialchars($_SESSION['error']) ?>
+            <?php unset($_SESSION['error']); ?>
+        </div>
+    <?php endif; ?>
+
+    <form action="/EvolveAI/public/index.php?url=auth/login" method="POST">
         
         <div class="form-group">
             <label for="email">Email Address</label>
@@ -76,7 +85,7 @@
     </form>
 
     <div class="form-footer">
-        Don't have an account? <a href="/EvolveAI/auth/signup">Sign Up</a>
+        Don't have an account? <a href="/EvolveAI/public/index.php?url=auth/signup">Sign Up</a>
     </div>
 </div>
 

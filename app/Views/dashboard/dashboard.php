@@ -1,6 +1,8 @@
 <?php
-/** * @var string|null $dailyPlanHtml 
- */
+$tasks = $plan['tasks'] ?? [];
+$completedTasks = count(array_filter($tasks, fn($t) => $t['status'] === 'done'));
+$totalTasks = count($tasks);
+$progress = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
 ?>
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-gray-50">
@@ -15,107 +17,155 @@
         body { font-family: 'Inter', sans-serif; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .strike-through { text-decoration: line-through; color: #9CA3AF; }
     </style>
 </head>
 <body class="h-full overflow-hidden flex">
 
-    <aside class="hidden md:flex flex-col w-64 bg-white border-r border-gray-200 text-gray-600 transition-all duration-300">
-        
-        <div class="h-16 flex items-center px-6 border-b border-gray-100">
-            <span class="text-xl font-bold tracking-tight text-gray-900">
-                Evolve<span class="text-blue-600">AI</span>
-            </span>
-        </div>
-
-        <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1">
-            <a href="/EvolveAI/public/index.php?url=dashboard/view" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg bg-blue-50 text-blue-700">
-                <i class="ph ph-squares-four text-lg mr-3"></i>
-                Dashboard
-            </a>
-
-            <a href="/EvolveAI/public/index.php?url=feedback/index" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-                <i class="ph ph-chat-centered-text text-lg mr-3"></i>
-                Feedback
-            </a>
-
-            <a href="/EvolveAI/public/index.php?url=articles/index" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-                <i class="ph ph-article text-lg mr-3"></i>
-                AI Articles
-                <span class="ml-auto bg-gray-100 text-xs py-0.5 px-2 rounded-full text-gray-600 group-hover:bg-gray-200">New</span>
-            </a>
-
-            <a href="/EvolveAI/public/index.php?url=community/index" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-                <i class="ph ph-users text-lg mr-3"></i>
-                Community
-            </a>
-        </nav>
-
-        <div class="p-4 border-t border-gray-100 bg-gray-50">
-            <div class="flex items-center gap-3">
-                <div class="h-9 w-9 rounded-full bg-white border border-gray-200 flex items-center justify-center text-xs font-bold text-blue-600 shadow-sm">
-                    ME
-                </div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-900 truncate">My Account</p>
-                    <p class="text-xs text-gray-500 truncate">Free Plan</p>
-                </div>
-                <a href="/EvolveAI/public/index.php?url=logout" class="text-gray-400 hover:text-red-600 transition-colors">
-                    <i class="ph ph-sign-out text-lg"></i>
-                </a>
-            </div>
-        </div>
-    </aside>
+    <?php require __DIR__ . '/../partials/sidebar.php'; ?>
 
     <div class="flex-1 flex flex-col h-full bg-gray-50 overflow-hidden">
         
         <header class="md:hidden bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 sticky top-0 z-10">
             <span class="text-lg font-bold text-gray-900">EvolveAI</span>
-            <button class="text-gray-500 p-2 hover:bg-gray-100 rounded-md">
+            <button id="open-sidebar" class="text-gray-500 hover:text-gray-700">
                 <i class="ph ph-list text-2xl"></i>
             </button>
         </header>
 
         <main class="flex-1 overflow-y-auto p-4 sm:p-8 relative">
             
-            <?php if (!empty($dailyPlanHtml)): ?>
+            <div class="max-w-4xl mx-auto">
                 
-                <div class="max-w-7xl mx-auto animate-fade-in-up">
-                    <?= $dailyPlanHtml ?>
-                </div>
-
-            <?php else: ?>
-
-                <div class="h-full flex flex-col items-center justify-center text-center">
-                    <div class="w-20 h-20 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 border border-gray-100">
-                        <i class="ph ph-rocket-launch text-4xl text-blue-600"></i>
+                <?php if (!empty($tasks)): ?>
+                <!-- Progress Header -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900">Today's Plan</h2>
+                            <p class="text-gray-500 text-sm"><?= date('l, F j, Y', strtotime($plan['plan_date'])) ?></p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-3xl font-bold text-blue-600" id="progress-text"><?= $progress ?>%</span>
+                            <p class="text-xs text-gray-400">Completed</p>
+                        </div>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Let's plan your success</h2>
-                    <p class="text-gray-500 max-w-md mb-8">
-                        Your dashboard is waiting. Generate a personalized daily plan to unlock your potential.
-                    </p>
-                    <a href="/EvolveAI/public/index.php?url=questionaire/view" 
-                       class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl shadow-lg shadow-blue-600/20 transition-all hover:scale-105">
-                        <i class="ph ph-magic-wand mr-2 text-lg"></i>
-                        Generate Today's Plan
-                    </a>
+                    <div class="w-full bg-gray-100 rounded-full h-3">
+                        <div class="bg-blue-600 h-3 rounded-full transition-all duration-500" 
+                             id="progress-bar"
+                             style="width: <?= $progress ?>%"></div>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <!-- Task List -->
+                <div class="space-y-4">
+                    <?php foreach ($tasks as $task): ?>
+                        <?php $isDone = $task['status'] === 'done'; ?>
+                        <div class="bg-white rounded-xl border border-gray-200 p-5 transition-all hover:shadow-md group task-item <?= $isDone ? 'opacity-75' : '' ?>" data-id="<?= $task['id'] ?>">
+                            <div class="flex items-start gap-4">
+                                <div class="pt-1">
+                                    <input type="checkbox" 
+                                           class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer task-checkbox"
+                                           <?= $isDone ? 'checked' : '' ?>>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-semibold text-gray-900 task-title <?= $isDone ? 'strike-through' : '' ?>">
+                                        <?= htmlspecialchars($task['title']) ?>
+                                    </h3>
+                                    <p class="text-sm text-gray-500 mt-1"><?= htmlspecialchars($task['description']) ?></p>
+                                    
+                                    <?php if(!empty($task['deadline'])): ?>
+                                        <div class="mt-3 flex items-center text-xs text-gray-400">
+                                            <i class="ph ph-clock mr-1"></i>
+                                            <?= htmlspecialchars($task['deadline']) ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                 <!-- Verification Action (Simulated) -->
+                                <button class="invisible group-hover:visible text-xs bg-gray-50 hover:bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg border border-gray-200 transition-colors">
+                                    Analyze
+                                </button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
 
-            <?php endif; ?>
+                <?php if (empty($tasks)): ?>
+                    <div class="text-center py-16">
+                        <div class="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <i class="ph ph-rocket-launch text-4xl text-blue-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Ready to Evolve?</h3>
+                        <p class="text-gray-500 max-w-sm mx-auto mb-8">
+                            You haven't generated a plan for today yet. Create your path to success now.
+                        </p>
+                        <a href="/EvolveAI/public/index.php?url=questionaire/view" 
+                           class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all shadow-lg shadow-blue-600/20 hover:scale-105">
+                            <i class="ph ph-magic-wand mr-2 text-lg"></i>
+                            Generate Daily Plan
+                        </a>
+                    </div>
+                <?php endif; ?>
+
+            </div>
 
         </main>
-
-        <footer class="bg-white border-t border-gray-200 py-4 px-8">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
-                <p>&copy; <?= date('Y') ?> EvolveAI. All rights reserved.</p>
-                <div class="flex gap-4 mt-2 md:mt-0">
-                    <a href="#" class="hover:text-gray-600 transition-colors">Privacy</a>
-                    <a href="#" class="hover:text-gray-600 transition-colors">Terms</a>
-                    <a href="#" class="hover:text-gray-600 transition-colors">Help</a>
-                </div>
-            </div>
-        </footer>
-
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const totalTasks = checkboxes.length;
+
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', async (e) => {
+                    const taskItem = e.target.closest('.task-item');
+                    const taskId = taskItem.dataset.id;
+                    const isChecked = e.target.checked;
+                    const status = isChecked ? 'done' : 'todo';
+                    const title = taskItem.querySelector('.task-title');
+
+                    // Optimistic UI Update
+                    if (isChecked) {
+                        taskItem.classList.add('opacity-75');
+                        title.classList.add('strike-through');
+                    } else {
+                        taskItem.classList.remove('opacity-75');
+                        title.classList.remove('strike-through');
+                    }
+                    updateProgress();
+
+                    // API Call
+                    try {
+                        const response = await fetch('/EvolveAI/public/index.php?url=dashboard/updateTask', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ taskId, status })
+                        });
+                        
+                        if (!response.ok) throw new Error('Failed');
+
+                    } catch (error) {
+                        console.error(error);
+                        // Revert on failure
+                        e.target.checked = !isChecked;
+                        updateProgress();
+                        alert('Could not update task. Please try again.');
+                    }
+                });
+            });
+
+            function updateProgress() {
+                const checkedCount = document.querySelectorAll('.task-checkbox:checked').length;
+                const percent = totalTasks > 0 ? Math.round((checkedCount / totalTasks) * 100) : 0;
+                
+                progressBar.style.width = percent + '%';
+                progressText.innerText = percent + '%';
+            }
+        });
+    </script>
 </body>
 </html>

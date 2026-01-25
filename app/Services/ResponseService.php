@@ -7,7 +7,7 @@ use RuntimeException;
 final class ResponseService
 {
     private const MODEL = 'gemini-3-flash-preview';
-    private static string $apiKey = 'AIzaSyBIaS9ZAiAfyWKYGIiVJO3vFstE5bV0Zec';
+    private static string $apiKey = 'AIzaSyByCYagoASaF9M-TrH7glCIEQ5GwOgD0p0';
 
     private static function buildUrl(): string
     {
@@ -64,9 +64,22 @@ final class ResponseService
         return trim($html);
     }
 
+    private static function parseJson(string $jsonStr): array
+    {
+        // Sanitize
+        $jsonStr = preg_replace('/^```json/i', '', $jsonStr);
+        $jsonStr = preg_replace('/^```/', '', $jsonStr);
+        $jsonStr = preg_replace('/```$/', '', $jsonStr);
+        
+        $data = json_decode($jsonStr, true);
+        return is_array($data) ? $data : [];
+    }
+
     // GENERATE OPPORTUNITIES
     
-    public static function generateOpportunities(array $userProfile): string
+    // GENERATE OPPORTUNITIES
+    
+    public static function generateOpportunities(array $userProfile): array
     {
         $inputJson = json_encode($userProfile, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
 
@@ -77,26 +90,27 @@ final class ResponseService
             Identify 6 HIGH-VALUE, CONCRETE income opportunities.
 
             OUTPUT REQUIREMENTS:
-            - **Output ONLY HTML content (divs).**
-            - **Design:** Modern Grid layout (Tailwind CSS).
-            - **Cards:** White bg, shadow-sm, rounded-xl, padding-6.
-            - **Content:** Title, Earnings Potential, and "Why it fits".
-            - **Action:**
-              <form action="/EvolveAI/public/index.php?url=response/plan" method="POST">
-                  <input type="hidden" name="opportunity_title" value="...">
-                  <input type="hidden" name="opportunity_desc" value="...">
-                  <input type="hidden" name="opportunity_context" value="...">
-                  <button type="submit" class="w-full mt-4 bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                      Generate Action Plan
-                  </button>
-              </form>
+            - **Output ONLY valid JSON.**
+            - **Format:** Array of objects.
+            - **Fields:** 
+                - "title": Short, catchy title.
+                - "description": Brief explanation (1-2 sentences).
+                - "estimated_earnings": e.g. "$500 - $1000 / month".
+                - "why_fit": One sentence explaining match.
+            - **NO Markdown.**
+            
+            Example:
+            [
+                {"title": "Freelance Writer", "description": "...", "estimated_earnings": "...", "why_fit": "..."}
+            ]
             PROMPT;
 
-        return self::makeApiCall($prompt);
+        $jsonStr = self::makeApiCall($prompt);
+        return self::parseJson($jsonStr);
     }
 
     // GENERATE EXECUTION PLAN 
-    public static function generateExecutionPlan(array $selectedData, int $dayNumber = 1): string
+    public static function generateExecutionPlan(array $selectedData, int $dayNumber = 1): array
     {
         $opportunityJson = json_encode($selectedData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
 
@@ -107,70 +121,51 @@ final class ResponseService
         Selected Opportunity:
         $opportunityJson
 
-        Create a **Dynamic Action Plan Dashboard** for **DAY $dayNumber**.
-
-        ### CONTEXT & DIFFICULTY:
-        - **If Day 1:** Focus on setup, research, and quick wins.
-        - **If Day 2-7:** Focus on skill acquisition and first outreach.
-        - **If Day 8+:** Focus on scaling, optimization, and monetization.
-        - **Tone:** highly motivational but strict.
+        Create a **Dynamic Action Plan** for **DAY $dayNumber**.
 
         ### STRUCTURE:
-        1.  **Header:** Title "DAY $dayNumber", Motivational Quote, and a **Progress Bar** (id="progress-fill").
-        2.  **Monthly Goal:** The big picture.
-        3.  **Weekly Sprint:** This week's specific focus.
-        4.  **Daily Tasks (The Core):**
-            - Create 4-6 actionable tasks.
-            - **HTML Structure per Task:**
-              <div class="flex items-start p-3 bg-white border rounded-lg mb-2">
-                 <input type="checkbox" class="task-checkbox h-5 w-5 text-blue-600 mt-1 mr-3 rounded" />
-                 <div class="flex-1">
-                     <h4 class="font-medium text-gray-900">[Task Title]</h4>
-                     <p class="text-xs text-gray-500">[Skill Tag] • [Est. Time]</p>
-                 </div>
-                 <button class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 hover:bg-gray-200">Verify</button>
-              </div>
+        Create 4-6 actionable tasks.
 
-        ### REQUIREMENTS:
-        - **Output ONLY HTML.**
-        - **Use Tailwind CSS.**
-        - **Include this Script at the end:**
-        <script>
-          (function(){
-              const boxes = document.querySelectorAll('.task-checkbox');
-              const bar = document.getElementById('progress-fill');
-              const text = document.getElementById('progress-text');
-
-              function update() {
-                  const total = boxes.length;
-                  const checked = document.querySelectorAll('.task-checkbox:checked').length;
-                  const pct = total ? Math.round((checked/total)*100) : 0;
-                  if(bar) bar.style.width = pct + '%';
-                  if(text) text.innerText = pct + '% Completed';
-                  localStorage.setItem('plan_progress_day_$dayNumber', pct);
-              }
-
-              boxes.forEach(b => b.addEventListener('change', update));
-              // Load saved state
-              const saved = localStorage.getItem('plan_progress_day_$dayNumber');
-              if(saved && bar) { 
-                  bar.style.width = saved + '%'; 
-                  if(text) text.innerText = saved + '% Completed';
-              }
-          })();
-        </script>
+        ### OUTPUT REQUIREMENTS:
+        - **Output ONLY valid JSON.**
+        - **Format:** Array of objects.
+        - **Fields per task:**
+            - "title": Actionable title.
+            - "description": Instructions.
+            - "estimated_minutes": Integer (e.g. 30).
+            - "skill_tag": e.g. "Market Research".
+            - "type": One of "learning", "action", "deliverable".
+        - **NO Markdown.**
+        
+        Example:
+        [
+            {"title": "Research Competitors", "description": "Find top 3...", "estimated_minutes": 60, "skill_tag": "Research", "type": "action"}
+        ]
         PROMPT;
             
-        return self::makeApiCall($prompt);
+        $jsonStr = self::makeApiCall($prompt);
+        return self::parseJson($jsonStr);
     }
 
     // =========================================================================
     // METHOD 3: GENERATE EDUCATIONAL ARTICLES (JSON Output)
     // =========================================================================
-    public static function generateArticlesContext(string $currentPlanHtml): array
+    // =========================================================================
+    // METHOD 3: GENERATE EDUCATIONAL ARTICLES (JSON Output)
+    // =========================================================================
+    public static function generateArticlesContext(array|string $currentPlan): array
     {
-        // We strip tags to save tokens, the AI just needs the text context
-        $planText = strip_tags($currentPlanHtml);
+        // Handle structured plan (Array) vs legacy HTML (String)
+        $planText = '';
+        if (is_array($currentPlan)) {
+            // Convert tasks array to string context
+            $tasks = $currentPlan['tasks'] ?? [];
+            foreach ($tasks as $t) {
+                $planText .= "- Task: {$t['title']} ({$t['description']})\n";
+            }
+        } else {
+            $planText = strip_tags($currentPlan);
+        }
 
         $prompt = <<<PROMPT
 You are an AI Learning Assistant.
@@ -216,10 +211,21 @@ PROMPT;
     // =========================================================================
     // METHOD 4: ANALYZE TASK SUBMISSION (Feedback Loop)
     // =========================================================================
-    public static function analyzeTaskSubmission(string $planContext, string $taskTitle, string $userWork): array
+    // =========================================================================
+    // METHOD 4: ANALYZE TASK SUBMISSION (Feedback Loop)
+    // =========================================================================
+    public static function analyzeTaskSubmission(array|string $planContext, string $taskTitle, string $userWork): array
     {
-        // Strip tags to give AI just the text context of the plan
-        $contextClean = strip_tags($planContext);
+        // Handle structured plan (Array) vs legacy HTML (String)
+        $contextClean = '';
+        if (is_array($planContext)) {
+             $tasks = $planContext['tasks'] ?? [];
+             foreach ($tasks as $t) {
+                 $contextClean .= "- Task: {$t['title']} ({$t['description']})\n";
+             }
+        } else {
+             $contextClean = strip_tags($planContext);
+        }
 
         $prompt = <<<PROMPT
 You are a strict but encouraging AI Mentor.

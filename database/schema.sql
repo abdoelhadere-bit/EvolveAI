@@ -28,6 +28,8 @@ CREATE TABLE user_profiles (
   updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
+DROP TABLE IF EXISTS user_profiles;
+
 CREATE TABLE daily_plans (
   id SERIAL PRIMARY KEY,
   user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -90,8 +92,6 @@ CREATE TABLE articles (
 );
 
 
-ALTER TABLE users ADD COLUMN answers JSONB;
 
 SELECT * FROM users;
 
-ALTER TABLE daily_plans ADD COLUMN html_content TEXT NOT NULL;

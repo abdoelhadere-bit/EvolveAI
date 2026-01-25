@@ -11,19 +11,7 @@
 </head>
 <body class="h-full overflow-hidden flex">
 
-    <aside class="hidden md:flex flex-col w-64 bg-white border-r border-gray-200 text-gray-600 transition-all duration-300">
-        <div class="h-16 flex items-center px-6 border-b border-gray-100">
-            <span class="text-xl font-bold tracking-tight text-gray-900">Evolve<span class="text-blue-600">AI</span></span>
-        </div>
-        <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1">
-            <a href="/EvolveAI/public/index.php?url=dashboard/view" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-                <i class="ph ph-squares-four text-lg mr-3"></i> Dashboard
-            </a>
-            <a href="/EvolveAI/public/index.php?url=articles/index" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg bg-blue-50 text-blue-700">
-                <i class="ph ph-article text-lg mr-3"></i> AI Articles
-            </a>
-        </nav>
-    </aside>
+    <?php require __DIR__ . '/../partials/sidebar.php'; ?>
 
     <div class="flex-1 flex flex-col h-full bg-gray-50 overflow-hidden">
         <header class="bg-white border-b border-gray-200 h-16 flex items-center px-8 justify-between">
