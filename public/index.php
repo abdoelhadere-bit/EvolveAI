@@ -7,9 +7,13 @@ require_once '../vendor/autoload.php';
 
 header("Access-Control-Allow-Origin: *");
 
-define('URLROOT', 'http://localhost/EvolveAi');
+define('URLROOT', 'http://localhost/EvolveAI');
+
+Dotenv\Dotenv::createImmutable(__DIR__ . '/../')->load();
 
 use App\Core\Router;
+
+session_start();
 
 $router= new Router();
 ?>

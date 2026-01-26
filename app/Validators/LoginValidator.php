@@ -4,25 +4,19 @@ namespace App\Validators;
 
 use Exception;
 use App\Models\UserModel;
+use App\Validators\EmailValidator;
 
 class LoginValidator
 {
     public function validate(UserModel $user): UserModel
     {
-        
-        if (empty($user->getEmail()) || empty($user->getEmail())) {
-            throw new Exception("Email and password are required.");
-        }
 
-        
-        $email = trim($user->getEmail());
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("Invalid email address.");
-        }
+        $emailValidator = new EmailValidator();
 
-        
-        if (strlen($user->getPassword()) < 1) {
-            throw new Exception("Password cannot be empty.");
+        $email = $emailValidator->validateEmail($user->getEmail());
+
+        if (empty($user->getPassword())) {
+            throw new Exception("Password is required.");
         }
 
         $user->setEmail($email);

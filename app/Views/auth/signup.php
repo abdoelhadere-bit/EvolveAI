@@ -128,7 +128,16 @@
         <p>Get started with your free account today</p>
     </div>
 
-    <form id="signupForm" action="/EvolveAI/index.php?url=auth/signup" method="POST">
+    <?php 
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    if (isset($_SESSION['error'])): ?>
+        <div style="background-color: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; border: 1px solid #fecaca;">
+            <?= htmlspecialchars($_SESSION['error']) ?>
+            <?php unset($_SESSION['error']); ?>
+        </div>
+    <?php endif; ?>
+
+    <form id="signupForm" action="/EvolveAI/public/index.php?url=auth/signup" method="POST">
         <div class="form-group">
             <label for="fullname">Full Name</label>
             <input type="text" id="fullname" name="full_name" placeholder="John Doe" required>
@@ -154,7 +163,7 @@
     </form>
 
     <div class="form-footer">
-        Already have an account? <a href="#">Log In</a>
+        Already have an account? <a href="/EvolveAI/auth/login">Log In</a>
     </div>
 </div>
 
