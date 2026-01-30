@@ -1,5 +1,5 @@
-RedirectMatch 403 ^/(app|core|config|storage|database|docs)/
-
-RewriteEngine On
-RewriteRule ^$ public/ [L]
-RewriteRule (.*) public/$1 [L]
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^$ public/index.php [L]
+    RewriteRule  (.*)$ public/$1 [L]
+</IfModule>
