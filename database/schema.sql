@@ -1,4 +1,4 @@
--- Active: 1768302342360@@127.0.0.1@5432@evolveai
+-- Active: 1769070738822@@127.0.0.1@5432@evolveai
 DROP DATABASE IF EXISTS evolveai;
 
 CREATE DATABASE evolveai;
@@ -79,3 +79,19 @@ CREATE TABLE user_opportunities (
 );
 
 
+CREATE TABLE articles (
+    id         BIGSERIAL PRIMARY KEY,
+    user_id    BIGINT NOT NULL,
+    title      VARCHAR(255) NOT NULL,
+    content    TEXT NOT NULL,
+    links      TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+
+ALTER TABLE users ADD COLUMN answers JSONB;
+
+SELECT * FROM daily_plans;
+
+ALTER TABLE daily_plans ADD COLUMN html_content TEXT NOT NULL;
